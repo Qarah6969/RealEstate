@@ -1,3 +1,4 @@
+import user
 from database import DataBase
 from submission_base import SubmissionSell, SubmissionBuy
 from typing import Union
@@ -19,33 +20,33 @@ class Utility:
             matches = db.cursor.fetchall()
             db.db.commit()
             if len(matches)>0:
-                for i in range(len(matches)):
-                    matches[i] = list(matches[i])
-                final_list = []
+                final_match = matches[0]
                 if isinstance(self, SubmissionBuy):
-                    for i in matches:
-                        submission = SubmissionSell(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
-                        final_list.append(submission)
+                    submission = SubmissionSell(final_match[0], final_match[1], final_match[2], final_match[3], final_match[4], final_match[5], final_match[6], final_match[7])
                 if isinstance(self, SubmissionSell):
-                    for i in matches:
-                        submission = SubmissionBuy(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9], i[10])
-                        final_list.append(submission)
-                return final_list
+                    submission = SubmissionBuy(final_match[0], final_match[1], final_match[2], final_match[3], final_match[4], final_match[5], final_match[6], final_match[7], final_match[8], final_match[9], final_match[10])
+                db.add_BuySubmission(self)
+                db.set_active(self.id, False, "buy_submissions")
+                return submission
+            else:
+                db.add_BuySubmission(self)
+                return []
 
         if self.type == -1 or self.type == -2:
             db.cursor.execute(f"SELECT * FROM buy_submissions WHERE submission_costA >= {self.cost} AND {self.cost} >= submission_costB AND submission_sizeA >= {self.size} AND {self.size} >= submission_roomsB AND submission_roomsA >= {self.rooms} AND {self.rooms} >= submission_roomsB")
             matches = db.cursor.fetchall()
             db.db.commit()
             if len(matches)>0:
-                for i in range(len(matches)):
-                    matches[i] = list(matches[i])
-                final_list = []
+                final_match = matches[0]
                 if isinstance(self, SubmissionBuy):
-                    for i in matches:
-                        submission = SubmissionSell(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
-                        final_list.append(submission)
+                    submission = SubmissionSell(final_match[0], final_match[1], final_match[2], final_match[3], final_match[4], final_match[5], final_match[6], final_match[7])
                 if isinstance(self, SubmissionSell):
-                    for i in matches:
-                        submission = SubmissionBuy(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9], i[10])
-                        final_list.append(submission)
-                return final_list
+                    submission = SubmissionBuy(final_match[0], final_match[1], final_match[2], final_match[3], final_match[4], final_match[5], final_match[6], final_match[7], final_match[8], final_match[9], final_match[10])
+                db.add_SellSubmission(self)
+                db.set_active(self.id, False, "sell_submissions")
+                return submission
+            else:
+                db.add_SellSubmission(self)
+                return []
+    
+    
