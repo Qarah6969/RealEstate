@@ -5,7 +5,7 @@ from utility import FindMatch
 
 @typechecked
 class User:
-    def __init__(self, user_id : int, user_username : str, user_password : str, user_type : str):
+    def __init__(self, user_id : int, user_username : str, user_password : str, user_type : int):
         self.id = user_id
         self.username = user_username
         self.password = user_password
@@ -19,7 +19,7 @@ class User:
     @typechecked
     def SignUp(self, username : str, password : str):
         db = DataBase()
-        if db.check_username_exists(username):
+        if validate_user(username):
             db.cursor.execute("SELECT rowid FROM users")
             id = db.cursor.fetchall()[-1] + 1
             db.db.commit()
@@ -30,7 +30,7 @@ class User:
     @typechecked
     def SignIn(self, username : str, password : str):
         db = DataBase()
-        if db.check_username_exists(username) and db.check_password_exists(password):
+        if validate_user(username, password):
             db.cursor.execute(f"SELECT * FROM users WHERE username = {username} AND password = {password}")
             usratrs = db.cursor.fetchall()
             db.db.commit()
@@ -38,7 +38,7 @@ class User:
             return CurrentUser
 
     def SignOut(self):
-        CurrentUser = User(0, "guest", "", "guest")
+        CurrentUser = User(0, "guest", "", 0)
         return CurrentUser
 
     @typechecked
@@ -47,7 +47,7 @@ class User:
         db.cursor.execute(f"SELECT submission_id FROM buy_submissions")
         id = db.cursor.fetchall()[-1] + 1
         db.db.commit()
-        submission = SubmissionBuy(id, submission_type, submission_costA, submission_costB, submission_sizeA, submission_sizeB, submission_roomsA, submission_roomsB, self.username + self.password, submission_rent_type, True)
+        submission = SubmissionBuy(id, submission_type, submission_costA, submission_costB, submission_sizeA, submission_sizeB, submission_roomsA, submission_roomsB, self.username, submission_rent_type, True)
         return FindMatch(submission)
     
     @typechecked
@@ -56,5 +56,5 @@ class User:
         db.cursor.execute(f"SELECT submission_id FROM sell_submissions")
         id = db.cursor.fetchall()[-1] + 1
         db.db.commit()
-        submission = SubmissionSell(id, submission_type, submission_cost, submission_size, submission_rooms, self.username + self.password, submission_rent_type, True)
+        submission = SubmissionSell(id, submission_type, submission_cost, submission_size, submission_rooms, self.username, submission_rent_type, True)
         return FindMatch(submission)
