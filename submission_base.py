@@ -7,15 +7,16 @@ class SubmissionSell:
         self.id = submission_id
         self.type = submission_type
         #available types => 
-        #خرید = 1
         #فروش = -1
-        #اجاره کردن = 2
         #اجاره دادن = -2
         self.cost = submission_cost
         self.size = submission_size
         self.rooms = submission_rooms
         self.applicant = submission_apllicant
         self.rent_type = submission_rent_type or "NULL"
+        #available types => 
+        #mortgage
+        #monthly
         self.active = submission_active 
 
 @typechecked
@@ -25,9 +26,7 @@ class SubmissionBuy:
         self.type = submission_type
         #available types => 
         #خرید = 1
-        #فروش = -1
         #اجاره کردن = 2
-        #اجاره دادن = -2
         self.costA = submission_costA
         self.costB = submission_costB
         self.sizeA = submission_sizeA
@@ -36,4 +35,7 @@ class SubmissionBuy:
         self.roomsB = submission_roomsB
         self.applicant = submission_apllicant
         self.rent_type = submission_rent_type or "NULL"
+        #available types => 
+        #mortgage
+        #monthly
         self.active = submission_active 

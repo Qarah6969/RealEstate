@@ -1,2 +1,2 @@
 class Config:
-    database_path="deeznuts.db"
+    database_path="RealEstate.db"
